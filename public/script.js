@@ -1,5 +1,6 @@
 
 let products = [];
+let cart = [];
 
 function loadSavedCart() {
     try {
@@ -11,7 +12,7 @@ function loadSavedCart() {
     }
 }
 
-let cart = loadSavedCart();
+cart = loadSavedCart();
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -23,8 +24,25 @@ function escapeHTML(value) {
     })[char]);
 }
 
+function getImageUrl(image) {
+    if (typeof image !== "string" || !image.trim()) {
+        return "https://placehold.co/300x220?text=No+Image";
+    }
+
+    const value = image.trim();
+
+    if (/^(https?:\/\/|\/)/i.test(value)) {
+        return value;
+    }
+
+    return "/" + value.replace(/^\.?\//, "");
+}
+
 async function loadProducts() {
     const productList = document.getElementById("product-list");
+    if (!productList) return;
+
+    productList.innerHTML = "<p>Loading products...</p>";
 
     try {
         const response = await fetch("/api/products");
@@ -35,28 +53,30 @@ async function loadProducts() {
 
         const data = await response.json();
 
+        if (!Array.isArray(data)) {
+            throw new Error("Unexpected product response");
+        }
+
         products = data.map((product) => ({
-            id: product._id,
-            name: product.name,
+            id: String(product._id || product.id || ""),
+            name: product.name || "Unnamed Product",
             price: Number(product.price),
-            image: product.image,
-            description: product.description
-        }));
+            image: getImageUrl(product.image),
+            description: product.description || "No description available."
+        })).filter((product) =>
+            product.id && Number.isFinite(product.price) && product.price >= 0
+        );
 
         displayProducts();
     } catch (error) {
         console.error("Product loading error:", error);
-
-        if (productList) {
-            productList.innerHTML =
-                "<p>Products load avvaledu. Please try again.</p>";
-        }
+        productList.innerHTML =
+            "<p>Products load avvaledu. Please refresh the page.</p>";
     }
 }
 
 function displayProducts() {
     const productList = document.getElementById("product-list");
-
     if (!productList) return;
 
     if (products.length === 0) {
@@ -67,20 +87,21 @@ function displayProducts() {
     productList.innerHTML = products.map((product) => `
         <div class="product-card">
             <img
-                src="${escapeHTML(product.image || "")}"
+                src="${escapeHTML(product.image)}"
                 alt="${escapeHTML(product.name)}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://placehold.co/300x220?text=No+Image';"
             >
             <h3>${escapeHTML(product.name)}</h3>
             <p>₹${product.price.toFixed(2)}</p>
 
-            <button onclick="addToCart('${product.id}')">
+            <button type="button" onclick="addToCart('${escapeHTML(product.id)}')">
                 Add to Cart
             </button>
 
-            <button
+            <button type="button"
                 style="margin-top:8px;"
-                onclick="viewProduct('${product.id}')"
-            >
+                onclick="viewProduct('${escapeHTML(product.id)}')">
                 View Details
             </button>
         </div>
@@ -90,6 +111,17 @@ function displayProducts() {
 function viewProduct(productId) {
     window.location.href =
         `product.html?id=${encodeURIComponent(productId)}`;
+}
+
+function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartCount() {
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+        cartCount.textContent = cart.length;
+    }
 }
 
 function addToCart(productId) {
@@ -102,34 +134,28 @@ function addToCart(productId) {
         return;
     }
 
-    cart.push(product);
+    cart.push({
+        id: product.id,
+        _id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        description: product.description
+    });
+
     saveCart();
     updateCartCount();
 
     const cartPanel = document.getElementById("cart-panel");
-
-    if (cartPanel && cartPanel.classList.contains("active")) {
+    if (cartPanel?.classList.contains("active")) {
         displayCart();
     }
 
     alert(`${product.name} added to cart!`);
 }
 
-function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function updateCartCount() {
-    const cartCount = document.getElementById("cart-count");
-
-    if (cartCount) {
-        cartCount.textContent = cart.length;
-    }
-}
-
 function showCart() {
     const cartPanel = document.getElementById("cart-panel");
-
     if (!cartPanel) return;
 
     cartPanel.classList.add("active");
@@ -138,7 +164,6 @@ function showCart() {
 
 function closeCart() {
     const cartPanel = document.getElementById("cart-panel");
-
     if (cartPanel) {
         cartPanel.classList.remove("active");
     }
@@ -152,7 +177,7 @@ function displayCart() {
 
     if (cart.length === 0) {
         cartItems.innerHTML = "<p>Your cart is empty.</p>";
-        cartTotal.textContent = "0";
+        cartTotal.textContent = "0.00";
         return;
     }
 
@@ -162,11 +187,8 @@ function displayCart() {
                 <h4>${escapeHTML(item.name)}</h4>
                 <p>₹${Number(item.price).toFixed(2)}</p>
             </div>
-
-            <button
-                class="remove-btn"
-                onclick="removeFromCart(${index})"
-            >
+            <button type="button" class="remove-btn"
+                onclick="removeFromCart(${index})">
                 Remove
             </button>
         </div>
@@ -181,10 +203,11 @@ function displayCart() {
 }
 
 function removeFromCart(index) {
-    if (index < 0 || index >= cart.length) return;
+    if (!Number.isInteger(index) || index < 0 || index >= cart.length) {
+        return;
+    }
 
     cart.splice(index, 1);
-
     saveCart();
     updateCartCount();
     displayCart();
@@ -193,6 +216,14 @@ function removeFromCart(index) {
 function checkout() {
     if (cart.length === 0) {
         alert("Your cart is empty.");
+        return;
+    }
+
+    const token = sessionStorage.getItem("authToken");
+
+    if (!token) {
+        alert("Please log in to proceed to checkout.");
+        window.location.href = "login.html";
         return;
     }
 
@@ -208,13 +239,7 @@ function showLoginLinks(userMenu) {
 
 function updateUserMenu() {
     const userMenu = document.getElementById("user-menu");
-
-    if (!userMenu) {
-        console.error(
-            'Login menu not found. Check index.html for id="user-menu".'
-        );
-        return;
-    }
+    if (!userMenu) return;
 
     const token = sessionStorage.getItem("authToken");
     const userData = sessionStorage.getItem("currentUser");
@@ -227,16 +252,11 @@ function updateUserMenu() {
                 <span>Hi, ${escapeHTML(user.name || "User")}</span>
                 <a href="profile.html">My Profile</a>
                 <a href="orders.html">My Orders</a>
-                ${
-                    user.role === "admin"
-                        ? '<a href="admin.html">Admin Dashboard</a>'
-                        : ""
-                }
-                <button type="button" onclick="logoutUser()">
-                    Logout
-                </button>
+                ${user.role === "admin"
+                    ? '<a href="admin.html">Admin Dashboard</a>'
+                    : ""}
+                <button type="button" onclick="logoutUser()">Logout</button>
             `;
-
             return;
         } catch (error) {
             console.error("User session error:", error);
@@ -248,20 +268,15 @@ function updateUserMenu() {
     showLoginLinks(userMenu);
 }
 
-
-
 function logoutUser() {
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("currentUser");
-
-    // Preserve the cart when logging out
     window.location.href = "index.html";
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
     cart = loadSavedCart();
     updateCartCount();
-    loadProducts();
     updateUserMenu();
+    loadProducts();
 });

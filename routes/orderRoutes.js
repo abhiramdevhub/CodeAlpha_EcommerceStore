@@ -8,6 +8,7 @@ const User = require("../models/User");
 
 const router = express.Router();
 
+// Authenticate logged-in user
 async function authenticateUser(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
@@ -45,6 +46,7 @@ async function authenticateUser(req, res, next) {
     }
 }
 
+// Authenticate admin
 function authenticateAdmin(req, res, next) {
     if (!req.user || req.user.role !== "admin") {
         return res.status(403).json({
@@ -62,11 +64,11 @@ router.get("/my-orders", authenticateUser, async (req, res) => {
             "customer.email": req.user.email
         }).sort({ createdAt: -1 });
 
-        res.status(200).json(orders);
+        return res.status(200).json(orders);
     } catch (error) {
         console.error("Fetch orders error:", error.message);
 
-        res.status(500).json({
+        return res.status(500).json({
             message: "Failed to fetch orders."
         });
     }
@@ -83,9 +85,12 @@ router.get(
 
             const totalRevenue = orders
                 .filter(order => order.status !== "Cancelled")
-                .reduce((total, order) => total + order.totalAmount, 0);
+                .reduce(
+                    (total, order) => total + order.totalAmount,
+                    0
+                );
 
-            res.status(200).json({
+            return res.status(200).json({
                 totalOrders: orders.length,
                 totalRevenue,
                 orders
@@ -93,7 +98,7 @@ router.get(
         } catch (error) {
             console.error("Admin orders error:", error.message);
 
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Failed to fetch all orders."
             });
         }
@@ -142,59 +147,107 @@ router.put(
                 });
             }
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Order status updated successfully.",
                 order
             });
         } catch (error) {
             console.error("Update order status error:", error.message);
 
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Failed to update order status."
             });
         }
     }
 );
 
-// Create an order
-router.post("/", async (req, res) => {
+// Create an order - login required
+router.post("/", authenticateUser, async (req, res) => {
     try {
         const { customer, items, paymentMethod } = req.body;
 
+        // Validate customer details
         if (
             !customer ||
-            !customer.name ||
-            !customer.email ||
-            !customer.phone ||
-            !customer.address ||
-            !Array.isArray(items) ||
-            items.length === 0 ||
-            !paymentMethod
+            typeof customer.name !== "string" ||
+            !customer.name.trim() ||
+            typeof customer.phone !== "string" ||
+            !customer.phone.trim() ||
+            typeof customer.address !== "string" ||
+            !customer.address.trim() ||
+            typeof paymentMethod !== "string" ||
+            !paymentMethod.trim()
         ) {
             return res.status(400).json({
                 message: "Please provide all required order details."
             });
         }
 
-        const orderItems = [];
-        let totalAmount = 0;
+        // Validate cart
+        if (
+            !Array.isArray(items) ||
+            items.length === 0 ||
+            items.length > 50
+        ) {
+            return res.status(400).json({
+                message: "Your cart is empty or invalid."
+            });
+        }
 
+        const combinedItems = new Map();
+
+        // Combine duplicate product entries and limit each product to 10
         for (const item of items) {
             if (
+                !item ||
                 !mongoose.isValidObjectId(item.id) ||
-                !Number.isInteger(item.quantity) ||
-                item.quantity < 1
+                !Number.isSafeInteger(item.quantity) ||
+                item.quantity < 1 ||
+                item.quantity > 10
             ) {
                 return res.status(400).json({
-                    message: "Invalid product or quantity."
+                    message: "Invalid product or quantity. Maximum quantity per product is 10."
                 });
             }
 
-            const product = await Product.findById(item.id);
+            const productId = String(item.id);
+            const existingQuantity = combinedItems.get(productId) || 0;
+            const newQuantity = existingQuantity + item.quantity;
 
-            if (!product) {
+            if (newQuantity > 10) {
                 return res.status(400).json({
-                    message: "A product in your cart was not found."
+                    message: "Maximum quantity per product is 10."
+                });
+            }
+
+            combinedItems.set(productId, newQuantity);
+        }
+
+        const orderItems = [];
+        let totalAmount = 0;
+
+        // Calculate prices from the database
+        for (const [productId, quantity] of combinedItems) {
+            const product = await Product.findById(productId);
+
+            if (
+                !product ||
+                !Number.isFinite(product.price) ||
+                product.price <= 0
+            ) {
+                return res.status(400).json({
+                    message: "A product in your cart is unavailable."
+                });
+            }
+
+            const lineTotal = product.price * quantity;
+
+            if (
+                !Number.isSafeInteger(lineTotal) ||
+                !Number.isSafeInteger(totalAmount + lineTotal)
+            ) {
+                return res.status(400).json({
+                    message: "Order total is invalid."
                 });
             }
 
@@ -202,25 +255,26 @@ router.post("/", async (req, res) => {
                 productId: product._id,
                 name: product.name,
                 price: product.price,
-                quantity: item.quantity
+                quantity
             });
 
-            totalAmount += product.price * item.quantity;
+            totalAmount += lineTotal;
         }
 
+        // Use the authenticated account's email
         const order = await Order.create({
             customer: {
                 name: customer.name.trim(),
-                email: customer.email.trim().toLowerCase(),
+                email: req.user.email,
                 phone: customer.phone.trim(),
                 address: customer.address.trim()
             },
             items: orderItems,
             totalAmount,
-            paymentMethod
+            paymentMethod: paymentMethod.trim()
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "Order placed successfully!",
             orderId: order._id,
             totalAmount: order.totalAmount
@@ -228,7 +282,7 @@ router.post("/", async (req, res) => {
     } catch (error) {
         console.error("Order creation error:", error.message);
 
-        res.status(500).json({
+        return res.status(500).json({
             message: "Failed to place order."
         });
     }

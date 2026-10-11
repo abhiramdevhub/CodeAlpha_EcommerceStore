@@ -56,49 +56,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Seed products - admin only
-router.post("/seed", authenticateAdmin, async (req, res) => {
-    try {
-        const products = [
-            {
-                name: "Wireless Headphones",
-                price: 1499,
-                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-                description: "High-quality wireless headphones with comfortable design and clear sound."
-            },
-            {
-                name: "Smart Watch",
-                price: 2499,
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-                description: "Modern smart watch with fitness tracking and everyday smart features."
-            },
-            {
-                name: "Running Shoes",
-                price: 1999,
-                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-                description: "Comfortable running shoes designed for everyday use and active lifestyles."
-            },
-            {
-                name: "Backpack",
-                price: 999,
-                image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
-                description: "Durable backpack suitable for college, travel and everyday carrying."
-            }
-        ];
 
-        await Product.deleteMany({});
-        const insertedProducts = await Product.insertMany(products);
-
-        res.json({
-            message: "Products added successfully.",
-            count: insertedProducts.length
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: "Failed to seed products."
-        });
-    }
-});
 
 // Add a product - admin only
 router.post("/", authenticateAdmin, async (req, res) => {

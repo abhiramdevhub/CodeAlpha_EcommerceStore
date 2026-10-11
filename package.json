@@ -2,12 +2,14 @@
   "name": "codealpha_ecommercestore",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"No automated tests configured\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Abhiram Sriperambudoori",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -15,10 +17,9 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.6",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.0.0",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.11.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
   }
 }
