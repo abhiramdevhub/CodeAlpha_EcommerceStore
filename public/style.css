@@ -1,0 +1,1213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+header {
+    background: #222;
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+.cart-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+main {
+    padding: 40px;
+}
+
+main h2 {
+    margin-bottom: 25px;
+}
+
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.product-card h3 {
+    margin: 15px 0 8px;
+}
+
+.product-card p {
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.product-card button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+}
+
+.product-card button:hover {
+    opacity: 0.85;
+}
+
+/* Cart Panel */
+
+.cart-panel {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 400px;
+    height: 100%;
+    background: white;
+    padding: 25px;
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.cart-panel.active {
+    right: 0;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.close-btn {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item h4 {
+    margin-bottom: 5px;
+}
+
+.cart-item p {
+    margin: 0;
+}
+
+.remove-btn {
+    border: none;
+    background: #d9534f;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cart-footer {
+    margin-top: 25px;
+}
+
+.cart-footer h3 {
+    font-size: 20px;
+}
+
+.checkout-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.checkout-btn:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+    .cart-panel {
+        width: 100%;
+        right: -100%;
+    }
+
+    header {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 18px;
+    }
+
+    main {
+        padding: 20px;
+    }
+}
+.product-detail-card {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail-card img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-detail-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.product-detail-info h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.product-detail-info h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.product-detail-info p {
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.product-detail-info button {
+    width: 180px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .product-detail-card {
+        grid-template-columns: 1fr;
+        margin: 20px;
+    }
+
+    .product-detail-card img {
+        height: 300px;
+    }
+}
+.checkout-container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-container h2 {
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.order-summary {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.order-summary h3 {
+    margin-bottom: 10px;
+}
+
+.place-order-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Product details page layout */
+.product-detail-card {
+    display: flex;
+    align-items: center;
+    gap: 45px;
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
+}
+
+.product-detail-card img {
+    width: 45%;
+    max-width: 470px;
+    height: 470px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.product-detail-info {
+    flex: 1;
+}
+
+.product-detail-info h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.product-detail-info h3 {
+    font-size: 26px;
+    margin-bottom: 22px;
+}
+
+.product-detail-info p {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.product-detail-info button {
+    display: block;
+    width: 210px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #222222;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.product-detail-info button:hover {
+    background: #444444;
+}
+
+/* Mobile layout */
+@media (max-width: 700px) {
+    .product-detail-card {
+        flex-direction: column;
+        gap: 25px;
+        margin: 20px 12px;
+        padding: 20px;
+    }
+
+    .product-detail-card img {
+        width: 100%;
+        height: 300px;
+    }
+
+    .product-detail-info {
+        width: 100%;
+    }
+
+    .product-detail-info h2 {
+        font-size: 26px;
+    }
+
+    .product-detail-info button {
+        width: 100%;
+    }
+}
+
+#user-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#user-menu a,
+#user-menu button {
+    display: inline-block;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#user-menu span {
+    font-weight: 600;
+}
+.cart-button-bottom {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 10px;
+    margin-top: 70px;
+    margin-bottom: 5px;
+}
+.cart-button-bottom #cart-button {
+    padding: 12px 24px;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Order History Page */
+.orders-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.orders-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#orders-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.order-card {
+    background: #fff;
+    color: #222;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-card h3 {
+    margin-top: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-card p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.order-card h4 {
+    margin-bottom: 8px;
+}
+
+.order-card ul {
+    padding-left: 20px;
+}
+
+.order-card li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .orders-container {
+        margin: 20px auto;
+        padding: 12px;
+    }
+
+    #orders-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Admin Dashboard ===== */
+
+.admin-header {
+    background: #1f2937;
+    color: #ffffff;
+    padding: 20px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.admin-header nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-header nav a,
+.admin-header nav button {
+    color: #ffffff;
+    background: #374151;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.admin-header nav a:hover,
+.admin-header nav button:hover {
+    background: #4b5563;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 0 22px 40px;
+}
+
+/* Dashboard statistics */
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-bottom: 35px;
+}
+
+.admin-stat-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.admin-stat-card h3 {
+    margin: 0 0 12px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.admin-stat-card p {
+    margin: 0;
+    color: #111827;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+/* Dashboard sections */
+
+.admin-section {
+    background: #ffffff;
+    padding: 28px;
+    margin-bottom: 28px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.admin-section h2 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    color: #111827;
+    font-size: 22px;
+}
+
+/* Add product form */
+
+#product-form {
+    display: grid;
+    gap: 10px;
+}
+
+#product-form label {
+    font-weight: 600;
+    color: #374151;
+    margin-top: 6px;
+}
+
+#product-form input,
+#product-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+}
+
+#product-form input:focus,
+#product-form textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+#product-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#product-form button {
+    margin-top: 12px;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#product-form button:hover {
+    background: #1d4ed8;
+}
+
+#product-message {
+    font-weight: 600;
+}
+
+/* Product and order items */
+
+#admin-products,
+#admin-orders {
+    display: grid;
+    gap: 16px;
+}
+
+
+.admin-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px 90px;
+    align-items: center;
+    column-gap: 20px;
+    padding: 20px 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    background: #f9fafb;
+}
+
+.admin-item > div {
+    min-width: 0;
+}
+
+.admin-item h3 {
+    margin: 0 0 10px;
+    color: #111827;
+}
+
+.admin-item p {
+    margin: 6px 0;
+    color: #4b5563;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.admin-item button {
+    width: 90px;
+    padding: 10px 0;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    background: #2563eb;
+    cursor: pointer;
+    font-size: 14px;
+    justify-self: center;
+}
+
+.admin-item button:hover {
+    background: #1d4ed8;
+}
+
+.admin-item button:last-child {
+    background: #dc2626;
+}
+
+.admin-item button:last-child:hover {
+    background: #b91c1c;
+}
+
+/* Responsive layout */
+
+@media (max-width: 700px) {
+    .admin-header {
+        padding: 18px;
+    }
+
+    .admin-header h1 {
+        font-size: 22px;
+    }
+
+    .admin-container {
+        margin: 22px auto;
+        padding: 0 14px 30px;
+    }
+
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .admin-stat-card {
+        padding: 20px;
+    }
+
+    .admin-section {
+        padding: 18px;
+    }
+
+        
+    .admin-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .admin-item > div {
+        grid-column: 1 / -1;
+    }
+
+    .admin-item button {
+        width: 100%;
+    }
+
+}
+
+/* Admin Orders Styling */
+#admin-orders {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#admin-orders .admin-section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+}
+
+#admin-orders .admin-section:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+#admin-orders h3 {
+    font-size: 18px;
+    color: #111827;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    overflow-wrap: anywhere;
+}
+
+#admin-orders p {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+#admin-orders p strong {
+    color: #1f2937;
+}
+
+#admin-orders ul {
+    margin: 8px 0 16px;
+    padding-left: 24px;
+}
+
+#admin-orders li {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+#admin-orders label {
+    display: inline-block;
+    margin: 12px 10px 8px 0;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+#admin-orders select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+#admin-orders select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+#admin-orders button {
+    display: inline-block;
+    margin: 8px 0 0 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#admin-orders button:hover {
+    background: #1d4ed8;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    #admin-orders .admin-section {
+        padding: 16px;
+    }
+
+    #admin-orders label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    #admin-orders select {
+        width: 100%;
+    }
+
+    #admin-orders button {
+        display: block;
+        width: 100%;
+        margin: 12px 0 0;
+    }
+}
+
+/* ===== Admin Search Toolbar ===== */
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.admin-toolbar input,
+.admin-toolbar select {
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-toolbar input {
+    flex: 1;
+    min-width: 240px;
+}
+
+.admin-toolbar select {
+    min-width: 170px;
+    cursor: pointer;
+}
+
+.admin-toolbar input:focus,
+.admin-toolbar select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.admin-toolbar input::placeholder {
+    color: #9ca3af;
+}
+
+/* ===== Manage Products ===== */
+#admin-products {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#admin-products .admin-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px 90px;
+    align-items: center;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+#admin-products .admin-item:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+}
+
+#admin-products .admin-item h3 {
+    margin: 0 0 10px;
+    color: #111827;
+    font-size: 18px;
+}
+
+#admin-products .admin-item p {
+    margin: 6px 0;
+    color: #6b7280;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#admin-products .admin-item button {
+    width: 90px;
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#admin-products .admin-item button:hover {
+    background: #1d4ed8;
+}
+
+#admin-products .admin-item button:last-child {
+    background: #dc2626;
+}
+
+#admin-products .admin-item button:last-child:hover {
+    background: #b91c1c;
+}
+
+/* ===== Manage Orders ===== */
+#admin-orders {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#admin-orders .order-card {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+#admin-orders .order-card h3 {
+    margin: 0 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #111827;
+    font-size: 20px;
+    overflow-wrap: anywhere;
+}
+
+#admin-orders .order-card p {
+    margin: 10px 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+#admin-orders .order-card p strong {
+    color: #111827;
+}
+
+#admin-orders .order-card ul {
+    padding-left: 24px;
+    margin: 10px 0 18px;
+}
+
+#admin-orders .order-card li {
+    margin: 8px 0;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+#admin-orders .order-card label {
+    display: inline-block;
+    margin: 14px 10px 10px 0;
+    color: #111827;
+    font-size: 14px;
+}
+
+#admin-orders .order-card select {
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    cursor: pointer;
+}
+
+#admin-orders .order-card button {
+    min-height: 40px;
+    margin: 8px 0 0 10px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#admin-orders .order-card button:hover {
+    background: #1d4ed8;
+}
+
+/* ===== Responsive Layout ===== */
+@media (max-width: 650px) {
+    .admin-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-toolbar input,
+    .admin-toolbar select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #admin-products .admin-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    #admin-products .admin-item > div {
+        grid-column: 1 / -1;
+    }
+
+    #admin-products .admin-item button {
+        width: 100%;
+    }
+
+    #admin-orders .order-card {
+        padding: 16px;
+    }
+
+    #admin-orders .order-card select {
+        display: block;
+        width: 100%;
+    }
+
+    #admin-orders .order-card button {
+        display: block;
+        width: 100%;
+        margin: 12px 0 0;
+    }
+}
+
+/* My Orders Header */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 18px 30px;
+    background-color: #222;
+    color: #fff;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+/* Header navigation links */
+header #user-menu,
+header .header-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+header a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+header a:hover {
+    color: #00bcd4;
+    text-decoration: underline;
+}
+
+/* My Orders page header links */
+body:has(.orders-container) header a {
+    color: #fff;
+}
+
+/* Order history page spacing */
+.orders-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+.orders-container h2 {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.order-card {
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-card h3 {
+    margin-top: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-card p {
+    margin: 14px 0;
+    line-height: 1.5;
+}
+
+/* Mobile responsive layout */
+@media (max-width: 600px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px;
+    }
+
+    header #user-menu,
+    header .header-links {
+        justify-content: flex-start;
+        gap: 14px;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    .orders-container {
+        width: 92%;
+        margin: 28px auto;
+    }
+
+    .order-card {
+        padding: 16px;
+    }
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+header nav a,
+header .header-links a {
+    margin-left: 30px;
+}

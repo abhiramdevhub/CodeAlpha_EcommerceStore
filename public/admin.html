@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CodeAlpha</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <a href="index.html">View Store</a>
+            <button type="button" onclick="adminLogout()">Logout</button>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+
+        <!-- Dashboard Statistics -->
+        <section class="admin-stats">
+            <div class="admin-stat-card">
+                <h3>Total Products</h3>
+                <p id="total-products">0</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Total Orders</h3>
+                <p id="total-orders">0</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Total Revenue</h3>
+                <p id="total-revenue">₹0</p>
+            </div>
+        </section>
+
+        <!-- Add Product -->
+        <section class="admin-section">
+            <h2>Add Product</h2>
+
+            <form id="product-form">
+                <label for="product-name">Product Name</label>
+                <input id="product-name" name="name" required>
+
+                <label for="product-price">Price (₹)</label>
+                <input id="product-price" name="price"
+                    type="number" min="1" step="0.01" required>
+
+                <label for="product-image">Image URL</label>
+                <input id="product-image" name="image"
+                    type="url" required>
+
+                <label for="product-description">Description</label>
+                <textarea id="product-description"
+                    name="description" required></textarea>
+
+                <button type="submit">Add Product</button>
+                <p id="product-message" role="status"></p>
+            </form>
+        </section>
+
+        <!-- Manage Products: only one section -->
+        <section class="admin-section">
+            <h2>Manage Products</h2>
+
+            <div class="admin-toolbar">
+                <input type="search"
+                    id="product-search"
+                    placeholder="Search products by name..."
+                    aria-label="Search products">
+            </div>
+
+            <div id="admin-products">Loading products...</div>
+        </section>
+
+        <!-- Manage Orders: only one section -->
+        <section class="admin-section">
+            <h2>Manage Orders</h2>
+
+            <div class="admin-toolbar">
+                <input type="search"
+                    id="order-search"
+                    placeholder="Search by customer name or email..."
+                    aria-label="Search orders">
+
+                <select id="order-status-filter"
+                    aria-label="Filter orders by status">
+                    <option value="All">All Orders</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div id="admin-orders">Loading orders...</div>
+        </section>
+
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>

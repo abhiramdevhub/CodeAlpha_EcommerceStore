@@ -1,0 +1,267 @@
+
+let products = [];
+
+function loadSavedCart() {
+    try {
+        const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+        return Array.isArray(savedCart) ? savedCart : [];
+    } catch (error) {
+        console.error("Cart loading error:", error);
+        return [];
+    }
+}
+
+let cart = loadSavedCart();
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+async function loadProducts() {
+    const productList = document.getElementById("product-list");
+
+    try {
+        const response = await fetch("/api/products");
+
+        if (!response.ok) {
+            throw new Error("Failed to load products");
+        }
+
+        const data = await response.json();
+
+        products = data.map((product) => ({
+            id: product._id,
+            name: product.name,
+            price: Number(product.price),
+            image: product.image,
+            description: product.description
+        }));
+
+        displayProducts();
+    } catch (error) {
+        console.error("Product loading error:", error);
+
+        if (productList) {
+            productList.innerHTML =
+                "<p>Products load avvaledu. Please try again.</p>";
+        }
+    }
+}
+
+function displayProducts() {
+    const productList = document.getElementById("product-list");
+
+    if (!productList) return;
+
+    if (products.length === 0) {
+        productList.innerHTML = "<p>No products available.</p>";
+        return;
+    }
+
+    productList.innerHTML = products.map((product) => `
+        <div class="product-card">
+            <img
+                src="${escapeHTML(product.image || "")}"
+                alt="${escapeHTML(product.name)}"
+            >
+            <h3>${escapeHTML(product.name)}</h3>
+            <p>₹${product.price.toFixed(2)}</p>
+
+            <button onclick="addToCart('${product.id}')">
+                Add to Cart
+            </button>
+
+            <button
+                style="margin-top:8px;"
+                onclick="viewProduct('${product.id}')"
+            >
+                View Details
+            </button>
+        </div>
+    `).join("");
+}
+
+function viewProduct(productId) {
+    window.location.href =
+        `product.html?id=${encodeURIComponent(productId)}`;
+}
+
+function addToCart(productId) {
+    const product = products.find(
+        (item) => String(item.id) === String(productId)
+    );
+
+    if (!product) {
+        alert("Product not found. Please refresh the page.");
+        return;
+    }
+
+    cart.push(product);
+    saveCart();
+    updateCartCount();
+
+    const cartPanel = document.getElementById("cart-panel");
+
+    if (cartPanel && cartPanel.classList.contains("active")) {
+        displayCart();
+    }
+
+    alert(`${product.name} added to cart!`);
+}
+
+function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartCount() {
+    const cartCount = document.getElementById("cart-count");
+
+    if (cartCount) {
+        cartCount.textContent = cart.length;
+    }
+}
+
+function showCart() {
+    const cartPanel = document.getElementById("cart-panel");
+
+    if (!cartPanel) return;
+
+    cartPanel.classList.add("active");
+    displayCart();
+}
+
+function closeCart() {
+    const cartPanel = document.getElementById("cart-panel");
+
+    if (cartPanel) {
+        cartPanel.classList.remove("active");
+    }
+}
+
+function displayCart() {
+    const cartItems = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+
+    if (!cartItems || !cartTotal) return;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty.</p>";
+        cartTotal.textContent = "0";
+        return;
+    }
+
+    cartItems.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <div>
+                <h4>${escapeHTML(item.name)}</h4>
+                <p>₹${Number(item.price).toFixed(2)}</p>
+            </div>
+
+            <button
+                class="remove-btn"
+                onclick="removeFromCart(${index})"
+            >
+                Remove
+            </button>
+        </div>
+    `).join("");
+
+    const total = cart.reduce(
+        (sum, item) => sum + Number(item.price),
+        0
+    );
+
+    cartTotal.textContent = total.toFixed(2);
+}
+
+function removeFromCart(index) {
+    if (index < 0 || index >= cart.length) return;
+
+    cart.splice(index, 1);
+
+    saveCart();
+    updateCartCount();
+    displayCart();
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    window.location.href = "checkout.html";
+}
+
+function showLoginLinks(userMenu) {
+    userMenu.innerHTML = `
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    `;
+}
+
+function updateUserMenu() {
+    const userMenu = document.getElementById("user-menu");
+
+    if (!userMenu) {
+        console.error(
+            'Login menu not found. Check index.html for id="user-menu".'
+        );
+        return;
+    }
+
+    const token = sessionStorage.getItem("authToken");
+    const userData = sessionStorage.getItem("currentUser");
+
+    if (token && userData) {
+        try {
+            const user = JSON.parse(userData);
+
+            userMenu.innerHTML = `
+                <span>Hi, ${escapeHTML(user.name || "User")}</span>
+                <a href="profile.html">My Profile</a>
+                <a href="orders.html">My Orders</a>
+                ${
+                    user.role === "admin"
+                        ? '<a href="admin.html">Admin Dashboard</a>'
+                        : ""
+                }
+                <button type="button" onclick="logoutUser()">
+                    Logout
+                </button>
+            `;
+
+            return;
+        } catch (error) {
+            console.error("User session error:", error);
+            sessionStorage.removeItem("authToken");
+            sessionStorage.removeItem("currentUser");
+        }
+    }
+
+    showLoginLinks(userMenu);
+}
+
+
+
+function logoutUser() {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("currentUser");
+
+    // Preserve the cart when logging out
+    window.location.href = "index.html";
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    cart = loadSavedCart();
+    updateCartCount();
+    loadProducts();
+    updateUserMenu();
+});

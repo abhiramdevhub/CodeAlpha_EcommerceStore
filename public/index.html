@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAlpha E-Commerce Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<header>
+    <h1>CodeAlpha E-Commerce Store</h1>
+
+    <div id="user-menu">
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </div>
+</header>
+
+
+    <main>
+        <h2>Products</h2>
+
+        <div id="product-list"></div>
+        <div class="cart-button-bottom">
+            <button id="cart-button" onclick="showCart()">
+                Cart (<span id="cart-count">0</span>)
+             </button>
+        </div>
+    </main>
+
+    <div id="cart-panel" class="cart-panel">
+
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-btn" onclick="closeCart()">X</button>
+        </div>
+
+        <div id="cart-items"></div>
+
+        <div class="cart-footer">
+            <h3>
+                Total: ₹<span id="cart-total">0</span>
+            </h3>
+
+            <button class="checkout-btn" onclick="checkout()">
+                Proceed to Checkout
+            </button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

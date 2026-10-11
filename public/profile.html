@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CodeAlpha Store</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-container h2 {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .profile-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-item strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .profile-actions a,
+        .profile-actions button {
+            flex: 1;
+            min-width: 130px;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 7px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        #profile-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <main class="profile-container">
+        <h2>My Profile</h2>
+
+        <div class="profile-item">
+            <strong>Full Name</strong>
+            <span id="profile-name">Loading...</span>
+        </div>
+
+        <div class="profile-item">
+            <strong>Email Address</strong>
+            <span id="profile-email">Loading...</span>
+        </div>
+
+        <div class="profile-actions">
+            <a href="index.html">Back to Store</a>
+            <button id="logout-button" type="button">Logout</button>
+        </div>
+
+        <p id="profile-message" role="status"></p>
+    </main>
+
+    <script src="profile.js"></script>
+</body>
+</html>

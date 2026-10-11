@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - CodeAlpha E-Commerce</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>CodeAlpha E-Commerce Store</h1>
+
+        <button
+            class="cart-btn"
+            onclick="window.location.href='index.html'">
+            Back to Store
+        </button>
+    </header>
+
+    <main>
+
+        <div class="checkout-container">
+
+            <h2>Checkout</h2>
+
+            <form id="checkout-form">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your full name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter your phone number"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address</label>
+
+                    <textarea
+                        id="address"
+                        rows="4"
+                        placeholder="Enter your delivery address"
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment">Payment Method</label>
+
+                    <select id="payment" required>
+                        <option value="">Select payment method</option>
+                        <option value="Cash on Delivery">
+                            Cash on Delivery
+                        </option>
+                        <option value="UPI">
+                            UPI
+                        </option>
+                        <option value="Card">
+                            Card
+                        </option>
+                    </select>
+                </div>
+
+                <div class="order-summary">
+
+                    <h3>Order Summary</h3>
+
+                    <p>
+                        Total:
+                        ₹<span id="checkout-total">0</span>
+                    </p>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="place-order-btn">
+                    Place Order
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <script src="checkout.js"></script>
+
+</body>
+</html>
