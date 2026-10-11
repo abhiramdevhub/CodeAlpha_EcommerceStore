@@ -102,7 +102,7 @@ Open `http://localhost:5000` in your browser.
 
 ## Author
 
-**Abhi Ram**
+**Abhiram Sriperambudoori**
 
 ## Project
 
